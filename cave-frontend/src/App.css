@@ -11,5 +11,7 @@ td {
   width: 35px;
   height: 35px;
 }
-td:hover {background-color: #c01a1a;}
+/* td:hover {background-color: #c01a1a;} */
+
+.dark {background-color: black;}
 
