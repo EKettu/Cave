@@ -21,8 +21,12 @@ const Cave = ({}) => {
     const [playerPreviousY, setPreviousY] = useState(0)
     const [playerCurrentX, setCurrentX] = useState(0)
     const [playerCurrentY, setCurrentY] = useState(0)
-  
-    const [monsters, setMonsters] = useState(createMonsters(2))
+
+    const [monsters, setMonsters] = useState(() => {
+        const initialState = createMonsters(2);
+        return initialState;
+      });
+
     const [monsterCount, setMonsterCount] = useState(2)
     const [lightLeft, setLight] = useState(10)
   
@@ -30,6 +34,7 @@ const Cave = ({}) => {
     
   
     const playerMove = (e) =>{
+        console.log("player moves, key is ", e.key)
         setPlayerMoving(true)
         var playerX = playerCurrentX
         var playerY = playerCurrentY
@@ -67,19 +72,15 @@ const Cave = ({}) => {
   
     const addMonsters = (tiles, number, caveSize) => {
         console.log("in addMonsters")
-        let updatedMonsters = new Array()
         for (let i = 0; i < number; i++) {
             let randomX = Math.floor(Math.random() * caveSize-1) + 1;
             let randomY = Math.floor(Math.random() * caveSize-1) + 1;
             let updatedMonster = monsters[i]
             updatedMonster.x = randomX
             updatedMonster.y = randomY
-            updatedMonsters.push(updatedMonster)
-            // setMonsters(monsters.map(monster => (monster.id === updatedMonster.id ? {...updatedMonster} : monster )))
+            setMonsters(monsters.map(monster => (monster.id === updatedMonster.id ? {...updatedMonster} : monster )))
             tiles[randomX][randomY].monster = true
         }
-        // console.log("updatedMonsters is ", updatedMonsters)
-        // setMonsters(updatedMonsters)
         return tiles
     }
   
@@ -99,9 +100,13 @@ const Cave = ({}) => {
         return tiles
     }
   
-    const [cave, setCave] = useState(createTheCave())
+    const [cave, setCave] = useState(() => {
+        const initialState = createTheCave();
+        return initialState;
+      });
   
     const moveMonsters = () => {
+        console.log("moving monsters")
         const newCave = [...cave]
         for (let index = 0; index < monsters.length; index++) {
             let updatedMonster = monsters[index]
@@ -190,7 +195,7 @@ const Cave = ({}) => {
         setPlayerMoving(false)
         setLight(lightLeft - 1)
         const newCave = [...cave]
-        newCave[playerPreviousX][playerPreviousY].player= false
+        newCave[playerPreviousX][playerPreviousY].player = false
         newCave[playerCurrentX][playerCurrentY].player = true
         setPreviousX(playerCurrentX)
         setPreviousY(playerCurrentY)
