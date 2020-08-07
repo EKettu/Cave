@@ -1,24 +1,24 @@
 import React, { useState } from 'react'
 import Button from './Button'
 
-const Cave = ({}) => {
+const Cave = () => {
 
     const create2dArray = (rows, columns) => [...Array(rows).keys()].map(i => Array(columns))
 
     const caveSize = 4
   
     const createMonsters = (amount) => {
-        console.log("here createMonsters")
-        var monsterArray = new Array()
+        console.log("createMonsters")
+        var monsterArray = []
         for (let index = 0; index < amount; index++) {
-            var monster = {id: index, x: 0, y:0}
+            let randomX = Math.floor(Math.random() * caveSize-1) + 1;
+            let randomY = Math.floor(Math.random() * caveSize-1) + 1;
+            var monster = {id: index, x: randomX, y: randomY}
             monsterArray.push(monster)
         }
         return monsterArray
     }
   
-    const [playerPreviousX, setPreviousX] = useState(0)
-    const [playerPreviousY, setPreviousY] = useState(0)
     const [playerCurrentX, setCurrentX] = useState(0)
     const [playerCurrentY, setCurrentY] = useState(0)
 
@@ -31,7 +31,6 @@ const Cave = ({}) => {
     const [lightLeft, setLight] = useState(10)
   
     const[playerMoves, setPlayerMoving] = useState(false)
-    
   
     const playerMove = (e) =>{
         console.log("player moves, key is ", e.key)
@@ -69,85 +68,76 @@ const Cave = ({}) => {
     }
   
     document.addEventListener('keydown', playerMove);
-  
-    const addMonsters = (tiles, number, caveSize) => {
-        console.log("in addMonsters")
-        for (let i = 0; i < number; i++) {
-            let randomX = Math.floor(Math.random() * caveSize-1) + 1;
-            let randomY = Math.floor(Math.random() * caveSize-1) + 1;
-            let updatedMonster = monsters[i]
-            updatedMonster.x = randomX
-            updatedMonster.y = randomY
-            setMonsters(monsters.map(monster => (monster.id === updatedMonster.id ? {...updatedMonster} : monster )))
-            tiles[randomX][randomY].monster = true
-        }
-        return tiles
-    }
-  
-    const createTheCave = () => {
+
+    const createTheCave = (playerX, playerY) => {
         console.log("create the cave")
         var tiles = create2dArray(4, 4)
         var keyIndex = 1
         for (let i = 0; i < caveSize; i++) {
             for (let j = 0; j < caveSize; j++) {
                 const tile = {key: keyIndex, x: i, y: j, player: false, monster: false}
+                for (let index = 0; index < monsters.length; index++) {
+                    let monster = monsters[index]
+                    if(monster.x===i && monster.y===j) {
+                        tile.monster = true
+                    }
+                }
                 tiles[i][j] = tile
                 keyIndex++
             }           
         }
-        tiles[0][0].player = true
-        tiles = addMonsters(tiles, 2, caveSize)
+        tiles[playerX][playerY].player = true
         return tiles
     }
   
     const [cave, setCave] = useState(() => {
-        const initialState = createTheCave();
+        const initialState = createTheCave(0,0);
         return initialState;
       });
+
+    const removeMonster = id => {
+        setMonsters(monsters.filter(monster => monster.id !== id))
+    }
   
     const moveMonsters = () => {
         console.log("moving monsters")
-        const newCave = [...cave]
         for (let index = 0; index < monsters.length; index++) {
             let updatedMonster = monsters[index]
-  
             let indexX = updatedMonster.x
             let indexY = updatedMonster.y
-  
-            newCave[indexX][indexY].monster = false
+
             let direction = Math.floor(Math.random() * 3);
-            if(direction=== 0) {
+            if(direction === 0) {
                 if(indexX+1<=caveSize-1) {
                     indexX+=1
                 }
             }
-            if(direction=== 1) {
+            if(direction === 1) {
                 if(indexX-1>=0) {
                     indexX-=1
                 }
             }
-            if(direction=== 2) {
+            if(direction === 2) {
                 if(indexY+1<=caveSize-1) {
                     indexY+=1
                 }
             }
-            if(direction=== 3) {
+            if(direction === 3) {
                 if(indexY-1>=0) {
                     indexY-=1
                 }
             }
-  
             updatedMonster.x = indexX
             updatedMonster.y = indexY
   
             setMonsters(monsters.map(monster => monster.id === updatedMonster.id ? {...updatedMonster} : monster ))
-            newCave[indexX][indexY].monster = true
          
             if(!didTheMonsterDie(indexX, indexY)) {
               console.log("monster did not die")
             }
             else {
-                newCave[indexX][indexY].monster = false
+                removeMonster(updatedMonster.id)
+                console.log("monsters is ", monsters)
                 setMonsterCount(monsterCount - 1)
                 if(didThePlayerWin(monsterCount)) {
                     stopTheGame()
@@ -156,17 +146,14 @@ const Cave = ({}) => {
             }
   
         }
-        setCave(newCave)
     }
   
-  
     const didTheMonsterDie = (monsterX, monsterY) => {
-        if(monsterX === playerCurrentX && monsterY ===playerCurrentY) {
+        if(monsterX === playerCurrentX && monsterY === playerCurrentY) {
             return true
         }
         return false
     }
-  
   
     const didThePlayerWin = (monsterCount) => {
         if (monsterCount === 0) {
@@ -176,13 +163,12 @@ const Cave = ({}) => {
     }
   
     const stopTheGame = () => {
-        if(lightLeft>0) {
+        if(lightLeft > 0) {
             return 'Victory'
         }
         return 'Loss'
   
     }
-  
   
     const render = (tile) => {
         if(playerMoves) {
@@ -190,15 +176,11 @@ const Cave = ({}) => {
         }
         return tile.player ? 'P': (tile.monster ? 'M' : '')
     }
-  
+
     const drawTheCave = () => {
         setPlayerMoving(false)
         setLight(lightLeft - 1)
-        const newCave = [...cave]
-        newCave[playerPreviousX][playerPreviousY].player = false
-        newCave[playerCurrentX][playerCurrentY].player = true
-        setPreviousX(playerCurrentX)
-        setPreviousY(playerCurrentY)
+        const newCave = createTheCave(playerCurrentX, playerCurrentY)
         setCave(newCave)
     }
   
@@ -209,7 +191,7 @@ const Cave = ({}) => {
                 <tbody>
                 {cave.map(row => 
                 <tr>{row.map(tile => 
-                        <td>{render(tile)}</td>)}
+                        <td key={tile.id}>{render(tile)}</td>)}
                 </tr>)              
                 }
                 </tbody>
