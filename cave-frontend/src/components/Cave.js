@@ -1,5 +1,6 @@
 import React, { useState} from 'react'
 import Button from './Button'
+import Table from './Table'
 import shortid from "shortid"
 
 const Cave = () => {
@@ -177,13 +178,6 @@ const Cave = () => {
         return 'Loss'
   
     }
-  
-    const render = (tile) => {
-        if(playerMoves) {
-            return ''
-        }
-        return tile.player ? 'P': (tile.monster ? 'M' : '')
-    }
 
     const drawTheCave = () => {
         setPlayerMoving(false)
@@ -195,16 +189,9 @@ const Cave = () => {
   
     return ( 
        <div> 
+           <p>Monsters left: {monsterCount}</p>
            <p>Batteries left: {lightLeft}</p>
-            <table key= {shortid.generate()} className = "CaveTable">
-                <tbody key = {shortid.generate()}>
-                {cave.map(row => 
-                <tr key = {shortid.generate()}>{row.map(tile => 
-                        <td key={tile.key}>{render(tile)}</td>)}
-                </tr>)              
-                }
-                </tbody>
-            </table>
+           <Table table = {cave} playerMoves = {playerMoves}/>
            <Button onClick={drawTheCave} text='Light' />
         </div>
     )
