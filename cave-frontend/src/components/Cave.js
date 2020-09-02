@@ -195,6 +195,7 @@ const Cave = () => {
   
     return ( 
        <div> 
+           <p>Batteries left: {lightLeft}</p>
             <table key= {shortid.generate()} className = "CaveTable">
                 <tbody key = {shortid.generate()}>
                 {cave.map(row => 
