@@ -1,12 +1,12 @@
-import React from 'react'
-import shortid from "shortid"
+import React from 'react';
+import shortid from "shortid";
 
 const Table = ({table, playerMoves}) => {
     const render = (tile) => {
-        if(playerMoves) {
-            return ''
+        if(playerMoves===true) {
+            return '';
         }
-        return tile.player ? 'P': (tile.monster ? 'M' : '')
+        return tile.player ? 'P': (tile.monster ? 'M' : '');
     }
 
     return (
@@ -19,7 +19,7 @@ const Table = ({table, playerMoves}) => {
             }
             </tbody>
         </table>
-    )
+    );
 }
 
-export default Table
+export default Table;
