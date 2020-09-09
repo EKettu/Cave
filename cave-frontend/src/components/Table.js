@@ -9,12 +9,18 @@ const Table = ({table, playerMoves}) => {
         return tile.player ? 'P': (tile.monster ? 'M' : '');
     }
 
+    const style = {
+        textAlign: 'center',
+        backgroundColor: playerMoves ? 'black' : 'white',
+        borderColor: playerMoves ? 'white' : 'black'
+    }
+
     return (
         <table key= {shortid.generate()} className = "CaveTable">
             <tbody key = {shortid.generate()}>
             {table.map(row => 
             <tr key = {shortid.generate()}>{row.map(tile => 
-                    <td key={tile.key}>{render(tile)}</td>)}
+                    <td style={style} key={tile.key}>{render(tile)}</td>)}
             </tr>)              
             }
             </tbody>

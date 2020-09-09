@@ -1,25 +1,13 @@
 import React, { useState, useEffect, useRef} from 'react';
 import Button from './Button';
 import Table from './Table';
-import shortid from "shortid";
+import { createMonsters } from '../game/monsters'
 
 const Cave = () => {
     const create2dArray = (rows, columns) => [...Array(rows).keys()].map(i => Array(columns));
 
     const caveSize = 4;
   
-    const createMonsters = (amount) => {
-        console.log("createMonsters");
-        let monsterArray = [];
-        for (let index = 0; index < amount; index++) {
-            let randomX = Math.floor(Math.random() * caveSize-1) + 1;
-            let randomY = Math.floor(Math.random() * caveSize-1) + 1;
-            var monster = {id: shortid.generate(), x: randomX, y: randomY};
-            monsterArray.push(monster);
-        }
-        return monsterArray;
-    }
-
     const playerLocation = useRef(null);
     if(playerLocation.current === null) {
         playerLocation.current = {
@@ -29,7 +17,7 @@ const Cave = () => {
 
     const monsters = useRef(null);
     if (monsters.current === null) {
-        monsters.current = createMonsters(2);
+        monsters.current = createMonsters(2, caveSize);
     }
 
     const monsterCount = useRef(2);
@@ -39,7 +27,7 @@ const Cave = () => {
     const [gameOver, setGameOver] = useState(false);
 
     const playerMove = (e) =>{
-        // console.log("gameOver is ", gameOver);
+        console.log("gameOver is ", gameOver);
         if(gameOver===false) {
             console.log("player moves, key is ", e.key);
             if(playerMoves===false) {
@@ -181,6 +169,7 @@ const Cave = () => {
   
     const stopTheGame = () => {
         setGameOver(true);
+        document.removeEventListener('keydown', playerMove);
         if(lightLeft > 0) {
             console.log('Victory');
         }
