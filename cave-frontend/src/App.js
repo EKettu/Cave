@@ -9,7 +9,7 @@ const App = () => {
 
   if (startPressed===true) {
     return (
-      <div>
+      <div className="container">
         <h1>Cave Game</h1>
         <Cave></Cave>
       </div>
@@ -18,7 +18,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h1>Cave Game</h1>
       <p>Squash monsters in the cave before your flashlight runs out of batteries!</p>
       <Button onClick={()=>setStartPressed(true)} text = "Start"/>

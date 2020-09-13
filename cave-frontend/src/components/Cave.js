@@ -22,14 +22,13 @@ const Cave = () => {
     }
 
     const monsterCount = useRef(2);
+    const lightLeft = useRef(8);
 
-    const [lightLeft, setLight] = useState(8);
     const [playerMoves, setPlayerMoving] = useState(false);
     const [gameOver, setGameOver] = useState(false);
 
     const playerMove = (e) =>{
         if(gameOver===false) {
-            // console.log("player moves, key is ", e.key);
             if(playerMoves===false) {
                 setPlayerMoving(true);
             }
@@ -40,7 +39,6 @@ const Cave = () => {
 
     useEffect(() => {
         document.addEventListener('keydown', playerMove);
-
         return () => {
           document.removeEventListener('keydown', playerMove);
         };
@@ -85,7 +83,7 @@ const Cave = () => {
     const stopTheGame = () => {
         setGameOver(true);
         document.removeEventListener('keydown', playerMove);
-        if(lightLeft > 0) {
+        if(lightLeft.current > 0) {
             console.log('Victory');
         }
         else {
@@ -95,17 +93,22 @@ const Cave = () => {
 
     const drawCave = () => {
         setPlayerMoving(false);
-        setLight(lightLeft - 1);
-        const newCave = createCave(playerLocation.current.x, playerLocation.current.y, 
-            caveSize, monsters.current);
-        setCave(newCave);
+        lightLeft.current = lightLeft.current -1;
+        if(lightLeft.current===0) {
+            stopTheGame();
+        }
+        else {
+            const newCave = createCave(playerLocation.current.x, playerLocation.current.y, 
+                caveSize, monsters.current);
+            setCave(newCave);
+        }
     }
 
     if(gameOver===true) {
         return (
             <div> 
                 <p>Monsters left: {monsterCount.current}</p>
-                <p>Batteries left: {lightLeft}</p>
+                <p>Batteries left: {lightLeft.current}</p>
                 <p>Game Over</p>
                 <Table table = {createCave(playerLocation.current.x, playerLocation.current.y, 
                     caveSize, monsters.current)} playerMoves = {false}/>
@@ -115,7 +118,7 @@ const Cave = () => {
     return ( 
        <div> 
            <p>Monsters left: {monsterCount.current}</p>
-           <p>Batteries left: {lightLeft}</p>
+           <p>Batteries left: {lightLeft.current}</p>
            <Table table = {cave} playerMoves = {playerMoves}/>
            <Button onClick = {drawCave} text = 'Light' />
         </div>
