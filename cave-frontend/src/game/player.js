@@ -28,3 +28,10 @@ export const movePlayer = (e, playerLocation, caveSize) => {
     
     return newPlayerLocation
 }
+
+export const didThePlayerWin = (monsterCount) => {
+    if (monsterCount === 0) {
+        return true;
+    }
+    return false;
+}

@@ -59,3 +59,10 @@ export const updateMonster = (updatedMonster, monsters) => {
     monsters.map(monster => monster.id === updatedMonster.id ? {...updatedMonster} : monster);
     return monsters;
 }
+
+export const didTheMonsterDie = (monsterX, monsterY, playerX, playerY) => {
+    if(monsterX === playerX && monsterY === playerY) {
+        return true;
+    }
+    return false;
+}
