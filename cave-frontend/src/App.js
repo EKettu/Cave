@@ -1,11 +1,22 @@
-import React, { useState}  from 'react';
+import React, { useState, useEffect}  from 'react';
 import './App.css';
+import axios from 'axios'
 import Cave from './components/Cave';
 import Button from './components/Button';
 
 const App = () => {
 
+  const baseUrl = 'http://localhost:3001/api/games'
   const [startPressed, setStartPressed] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get(baseUrl)
+      .then(response => {
+        console.log('promise fulfilled')
+        console.log(response.data)
+      })
+  }, [])
 
   if (startPressed===true) {
     return (
