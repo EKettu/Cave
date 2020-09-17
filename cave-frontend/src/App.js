@@ -6,7 +6,7 @@ import Button from './components/Button';
 
 const App = () => {
 
-  const baseUrl = 'http://localhost:3001/api/games'
+  const baseUrl = '/api/games'
   const [startPressed, setStartPressed] = useState(false);
 
   useEffect(() => {
