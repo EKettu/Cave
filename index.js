@@ -1,8 +1,10 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const path = require('path')
 
 app.use(cors())
+app.use(express.static(path.join(__dirname, 'cave-frontend/build')))
 
 let games = [
   {
@@ -17,8 +19,8 @@ let games = [
   }
 ]
 
-app.get('/', (request, response) => {
-  response.send('Server running')
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/cave-frontend/build/index.html'))
 })
 
 app.get('/api/games', (req, res) => {
