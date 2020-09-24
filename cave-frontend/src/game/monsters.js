@@ -60,7 +60,7 @@ export const updateMonster = (updatedMonster, monsters) => {
     return monsters;
 }
 
-export const didTheMonsterDie = (monsterX, monsterY, playerX, playerY) => {
+export const monsterMetPlayer = (monsterX, monsterY, playerX, playerY) => {
     if(monsterX === playerX && monsterY === playerY) {
         return true;
     }

@@ -1,24 +1,24 @@
 export const movePlayer = (e, playerLocation, caveSize) => {
     let playerX = playerLocation.x;
     let playerY = playerLocation.y;
-    if (e.key==='w') {
+    if (e.key === 'w' || e.key === 'ArrowUp') {
         if(playerX-1>=0) {
             playerX -= 1;
         }
     }
-    if (e.key==='a') {
+    if (e.key === 'a' || e.key === 'ArrowLeft') {
         if(playerY-1>=0) {
             playerY -= 1;
         }
     }
-    if (e.key==='d') {
+    if (e.key === 'd' || e.key === 'ArrowRight') {
         if(playerY+1<=caveSize-1) {
             playerY += 1;
         }
     }
-    if (e.key==='s') {
+    if (e.key === 's' || e.key === 'ArrowDown') {
         if(playerX+1<=caveSize-1) {
-        playerX += 1;
+            playerX += 1;
         }
     }
     const newPlayerLocation = {
@@ -26,7 +26,7 @@ export const movePlayer = (e, playerLocation, caveSize) => {
         y: playerY
     };
     
-    return newPlayerLocation
+    return newPlayerLocation;
 }
 
 export const didThePlayerWin = (monsterCount) => {

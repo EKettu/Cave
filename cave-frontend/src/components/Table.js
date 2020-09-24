@@ -6,7 +6,7 @@ const Table = ({table, playerMoves}) => {
         if(playerMoves===true) {
             return '';
         }
-        return tile.player ? 'P': (tile.monster ? 'M' : '');
+        return tile.monster? 'M' : (tile.player? 'P' : tile.shadow ? 'S' : '');
     }
 
     const style = {
