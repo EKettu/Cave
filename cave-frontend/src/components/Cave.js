@@ -42,7 +42,8 @@ const Cave = () => {
     const [playerLost, setPlayerLost] = useState(false);
 
     const [cave, setCave] = useState(() => {
-        const initialState = createCave(playerStartX, playerStartY, shadowStartX, shadowStartY, caveSize, monsters.current);
+        const initialState = createCave(playerStartX, playerStartY, 
+            shadowStartX, shadowStartY, caveSize, monsters.current);
         return initialState;
     });
 
@@ -54,7 +55,8 @@ const Cave = () => {
             playerLocation.current = movePlayer(e, playerLocation.current, caveSize)
             moveMonsters();
             shadowLocation.current = moveShadow(shadowLocation.current, caveSize);
-            if(monsterMetPlayer(shadowLocation.current.x, shadowLocation.current.y, playerLocation.current.x, playerLocation.current.y)) {
+            if(monsterMetPlayer(shadowLocation.current.x, shadowLocation.current.y, 
+                playerLocation.current.x, playerLocation.current.y)) {
                 setPlayerLost(true);
                 stopTheGame();
             }
@@ -74,7 +76,6 @@ const Cave = () => {
             monsters.current = updateMonster(monster, monsters.current);
          
             if(monsterMetPlayer(monster.x, monster.y, playerLocation.current.x, playerLocation.current.y)) {
-                console.log("MONSTER DIED!");
                 monsters.current = removeMonster(monster.id, monsters.current);
                 monsterCount.current = monsterCount.current - 1;
                 if(didThePlayerWin(monsterCount.current)) {
@@ -87,10 +88,7 @@ const Cave = () => {
     const stopTheGame = () => {
         setGameOver(true);
         if(playerLost === false) {
-            if(batteriesLeft.current > 0) {
-                console.log('Victory');
-            }
-            else {
+            if(batteriesLeft.current === 0) {
                 setPlayerLost(true);
                 console.log('Loss');
             }
@@ -127,9 +125,9 @@ const Cave = () => {
     }
 
     if(gameOver===true) {
-        let result = "Victory!"
+        let result = "Victory!";
         if(playerLost === true) {
-            result = "You lost"
+            result = "You lost";
         }
         return (
             <div> 
@@ -137,7 +135,7 @@ const Cave = () => {
                 <p>Batteries left: {batteriesLeft.current}</p>
                 <p>Game Over: {result}</p>
                 <Table table = {createCave(playerLocation.current.x, playerLocation.current.y, 
-                    shadowStartX, shadowStartY, caveSize, monsters.current)} playerMoves = {false}/>
+                    shadowLocation.current.x, shadowLocation.current.y, caveSize, monsters.current)} playerMoves = {false} playerLost = {playerLost}/>
                 <Button onClick = {restartTheGame} text = 'New Game' />
             </div>
         );
@@ -146,7 +144,7 @@ const Cave = () => {
        <div> 
            <p>Monsters left: {monsterCount.current}</p>
            <p>Batteries left: {batteriesLeft.current}</p>
-           <Table table = {cave} playerMoves = {playerMoves}/>
+           <Table table = {cave} playerMoves = {playerMoves} playerLost = {playerLost}/>
            <Button onClick = {drawCave} text = 'Light' />
         </div>
     );

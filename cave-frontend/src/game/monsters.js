@@ -1,7 +1,6 @@
 import shortid from "shortid";
 
 export const createMonsters = (amount, caveSize) => {
-    console.log("createMonsters");
     let monsterArray = [];
     while (monsterArray.length < amount) {
         let randomX = Math.floor(Math.random() * (caveSize-1)) + 1;
@@ -14,7 +13,6 @@ export const createMonsters = (amount, caveSize) => {
 
         monsterArray.push(monster);
     }
-    // console.log(monsterArray)
     return monsterArray;
 }
 

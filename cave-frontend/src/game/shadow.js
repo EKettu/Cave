@@ -20,7 +20,7 @@ export const moveShadow = (shadowLocation, caveSize) => {
     }
     if (direction === 3) {
         if(shadowX+1<=caveSize-1) {
-        shadowX += 1;
+            shadowX += 1;
         }
     }
     const newShadowLocation = {

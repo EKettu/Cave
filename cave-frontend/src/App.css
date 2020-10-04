@@ -8,9 +8,7 @@ table, th, td {
 
 td {
   empty-cells: show;
-  width: 35px;
-  height: 35px;
+  width: 70px;
+  height: 70px;
 }
-
-/* .dark {background-color: black;} */
 

@@ -1,18 +1,27 @@
 import React from 'react';
 import shortid from "shortid";
+import playerPic from '../images/player.png';
+import shadowPic from '../images/shadow.png';
+import monsterPic from '../images/monster.png';
 
-const Table = ({table, playerMoves}) => {
+const Table = ({table, playerMoves, playerLost}) => {
+
     const render = (tile) => {
         if(playerMoves===true) {
             return '';
         }
-        return tile.monster? 'M' : (tile.player? 'P' : tile.shadow ? 'S' : '');
+        if(playerLost === true) {
+            return tile.monster? <img src = {monsterPic} alt = 'Monster' /> : (
+            tile.shadow ? <img src = {shadowPic} alt = 'Shadow' /> : '');
+        }
+        return tile.monster? <img src = {monsterPic} alt = 'Monster' /> : (tile.player? <img src = {playerPic} alt = 'Player' /> : 
+            tile.shadow ? <img src = {shadowPic} alt = 'Shadow' /> : '');
     }
 
     const style = {
         textAlign: 'center',
-        backgroundColor: playerMoves ? 'black' : 'white',
-        borderColor: playerMoves ? 'white' : 'black'
+        backgroundColor: playerMoves ? 'black' : '#181818',
+        borderColor: playerMoves ? 'black' : '#181818'
     }
 
     return (
