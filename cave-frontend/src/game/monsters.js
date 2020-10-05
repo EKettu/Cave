@@ -64,3 +64,12 @@ export const monsterMetPlayer = (monsterX, monsterY, playerX, playerY) => {
     }
     return false;
 }
+
+export const monsterIsStillAlive = (monster, monsters) => {
+    for (let i = 0; i < monsters.length; i++) {
+        if (monsters[i] === monster) {
+            return true;
+        }
+    }
+    return false;
+}

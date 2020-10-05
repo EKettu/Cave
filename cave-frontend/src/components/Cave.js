@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef} from 'react';
 import Button from './Button';
 import Table from './Table';
 import { createMonsters, moveMonster, updateMonster, 
-removeMonster, monsterMetPlayer } from '../game/monsters';
+removeMonster, monsterMetPlayer, monsterIsStillAlive } from '../game/monsters';
 import { movePlayer, didThePlayerWin } from '../game/player';
 import { moveShadow } from '../game/shadow';
 import { createCave } from '../game/cave';
@@ -68,20 +68,28 @@ const Cave = () => {
         return () => {
           document.removeEventListener('keydown', playerMove);
         };
-      }, []);
+    }, []);
 
     const moveMonsters = () => {
         for (let i = 0; i < monsters.current.length; i++) {
-            let monster = moveMonster(monsters.current[i], caveSize);          
-            monsters.current = updateMonster(monster, monsters.current);
-         
-            if(monsterMetPlayer(monster.x, monster.y, playerLocation.current.x, playerLocation.current.y)) {
-                monsters.current = removeMonster(monster.id, monsters.current);
-                monsterCount.current = monsterCount.current - 1;
-                if(didThePlayerWin(monsterCount.current)) {
-                    stopTheGame();
-                }              
+            let monster = monsters.current[i]; 
+            checkMonsterPlayerMeeting(monster, playerLocation);    
+
+            if(monsterIsStillAlive(monster, monsters.current)) { //Player did not squash the monster yet
+                monster = moveMonster(monster, caveSize);        //and the monster can move    
+                monsters.current = updateMonster(monster, monsters.current);
+                checkMonsterPlayerMeeting(monster, playerLocation);
             }
+        }
+    }
+
+    const checkMonsterPlayerMeeting = (monster, playerLocation) => {
+        if(monsterMetPlayer(monster.x, monster.y, playerLocation.current.x, playerLocation.current.y)) {
+            monsters.current = removeMonster(monster.id, monsters.current);
+            monsterCount.current = monsterCount.current - 1;
+            if(didThePlayerWin(monsterCount.current)) {
+                stopTheGame();
+            }            
         }
     }
 
