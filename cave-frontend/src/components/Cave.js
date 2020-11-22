@@ -6,6 +6,10 @@ removeMonster, monsterMetPlayer, monsterIsStillAlive } from '../game/monsters';
 import { movePlayer, didThePlayerWin } from '../game/player';
 import { moveShadow } from '../game/shadow';
 import { createCave } from '../game/cave';
+import { saveGameResult } from '../game/result';
+import GameStatistic from './GameStatistic';
+import gameService from '../services/games.js';
+
 
 const Cave = () => {
 
@@ -16,6 +20,8 @@ const Cave = () => {
     const playerStartY = 0;
     const shadowStartX = caveSize-1;
     const shadowStartY = caveSize-1;
+
+    const [games, setGames] = useState([]);
   
     const playerLocation = useRef(null);
     if(playerLocation.current === null) {
@@ -39,13 +45,21 @@ const Cave = () => {
 
     const [playerMoves, setPlayerMoving] = useState(false);
     const [gameOver, setGameOver] = useState(false);
-    const [playerLost, setPlayerLost] = useState(false);
+    const playerLost = useRef(false);
 
     const [cave, setCave] = useState(() => {
         const initialState = createCave(playerStartX, playerStartY, 
             shadowStartX, shadowStartY, caveSize, monsters.current);
         return initialState;
     });
+
+    useEffect(() => {
+        gameService
+          .getAll()
+          .then(initialGames => {
+            setGames(initialGames)
+          })
+      }, [])
 
     const playerMove = (e) =>{
        if(gameOver===false) {
@@ -57,8 +71,8 @@ const Cave = () => {
             shadowLocation.current = moveShadow(shadowLocation.current, caveSize);
             if(monsterMetPlayer(shadowLocation.current.x, shadowLocation.current.y, 
                 playerLocation.current.x, playerLocation.current.y)) {
-                setPlayerLost(true);
-                stopTheGame();
+                    playerLost.current = true;
+                    stopTheGame();
             }
        }
     }
@@ -95,18 +109,25 @@ const Cave = () => {
 
     const stopTheGame = () => {
         setGameOver(true);
-        if(playerLost === false) {
+        if(playerLost.current === false) {
             if(batteriesLeft.current === 0) {
-                setPlayerLost(true);
-                console.log('Loss');
+                playerLost.current = true; 
             }
         }
+        addNewGame(saveGameResult(playerLost.current, batteryCount-batteriesLeft.current));
+    }
+    const addNewGame = (newGame) => {
+        const gameObject = newGame;
+        gameService.create(gameObject)
+            .then(returnedGame => {
+                setGames(games => games.concat(returnedGame));
+        });
     }
 
     const restartTheGame = () => {
         setGameOver(false);
         setPlayerMoving(false);
-        setPlayerLost(false);
+        playerLost.current = false;
         playerLocation.current = {
             x: playerStartX, y: playerStartY
         };
@@ -134,7 +155,7 @@ const Cave = () => {
 
     if(gameOver===true) {
         let result = "Victory!";
-        if(playerLost === true) {
+        if(playerLost.current === true) {
             result = "You lost";
         }
         return (
@@ -143,8 +164,9 @@ const Cave = () => {
                 <p>Batteries left: {batteriesLeft.current}</p>
                 <p>Game Over: {result}</p>
                 <Table table = {createCave(playerLocation.current.x, playerLocation.current.y, 
-                    shadowLocation.current.x, shadowLocation.current.y, caveSize, monsters.current)} playerMoves = {false} playerLost = {playerLost}/>
+                    shadowLocation.current.x, shadowLocation.current.y, caveSize, monsters.current)} playerMoves = {false} playerLost = {playerLost.current}/>
                 <Button onClick = {restartTheGame} text = 'New Game' />
+                <GameStatistic games = {games} />
             </div>
         );
     }
@@ -152,8 +174,9 @@ const Cave = () => {
        <div> 
            <p>Monsters left: {monsterCount.current}</p>
            <p>Batteries left: {batteriesLeft.current}</p>
-           <Table table = {cave} playerMoves = {playerMoves} playerLost = {playerLost}/>
+           <Table table = {cave} playerMoves = {playerMoves} playerLost = {playerLost.current}/>
            <Button onClick = {drawCave} text = 'Light' />
+           <GameStatistic games = {games} />
         </div>
     );
 }

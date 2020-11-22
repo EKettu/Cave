@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/games
+Content-Type: application/json
+
+{
+    "id": 3,
+    "date": "2020-10-12T17:30:31.098Z",
+    "player_won": true,
+    "batteries_used": 3
+}
