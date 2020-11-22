@@ -15,7 +15,7 @@ const Cave = () => {
 
     const caveSize = 5;
     const monsterAmount = 3;
-    const batteryCount = 12;
+    const batteryCount = 10;
     const playerStartX = 0;
     const playerStartY = 0;
     const shadowStartX = caveSize-1;
@@ -57,7 +57,7 @@ const Cave = () => {
         gameService
           .getAll()
           .then(initialGames => {
-            setGames(initialGames)
+            setGames(initialGames);
           })
       }, [])
 

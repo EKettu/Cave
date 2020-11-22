@@ -11,6 +11,9 @@ const App = () => {
     return (
       <div className="container">
         <h1>Cave Game</h1>
+        <p>Squash all monsters before you run out of batteries, but don't let the shadow catch you. 
+          The shadow can hide behind monsters, so be careful!
+        </p>
         <Cave></Cave>
       </div>
     );
