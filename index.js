@@ -10,11 +10,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'cave-frontend/build')));
 
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/cave-frontend/build/index.html'));
-});
-
 app.get('/api/games', (req, res) => {
   Game.find({}).then(games => {
     res.json(games.map(game => game.toJSON()));
@@ -43,6 +38,10 @@ const errorHandler = (error, request, response, next) => {
 
   next(error);
 };
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/cave-frontend/build/index.html'));
+});
 
 app.use(errorHandler);
 
